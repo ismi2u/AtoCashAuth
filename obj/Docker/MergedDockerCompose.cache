@@ -1,0 +1,16 @@
+services:
+  atocash:
+    build:
+      context: C:\Users\MohamedKhan\source\repos\AtoCashAuth
+      dockerfile: AtoCash/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: atocash
+    ports:
+    - target: 80
+    - target: 443
+    volumes:
+    - C:\Users\MohamedKhan\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\MohamedKhan\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+version: '3.4'
