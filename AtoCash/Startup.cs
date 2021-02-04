@@ -1,7 +1,9 @@
+using AtoCash.Authentication;
 using AtoCash.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,11 @@ namespace AtoCash
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AtoCashDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WithinContainerSQLConnectionString")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AtoCashDbContext>();
+
+
+
             services.AddControllers();
             services.AddCors(options => options.AddDefaultPolicy(
               builder => builder.AllowAnyOrigin()));
@@ -59,7 +66,8 @@ namespace AtoCash
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication(); //add before MVC
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

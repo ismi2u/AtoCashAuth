@@ -1,0 +1,164 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AtoCash.Authentication
+{
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public class AdministrationController : ControllerBase
+    {
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        {
+            this.roleManager = roleManager;
+
+            this.userManager = userManager;
+        }
+
+
+        [HttpPost]
+        [ActionName("CreateRole")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> CreateRole([FromBody] RoleModel model)
+        {
+
+            IdentityRole identityRole = new IdentityRole()
+            {
+                Name = model.RoleName
+            };
+
+            IdentityResult result = await roleManager.CreateAsync(identityRole);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "New Role Created" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return BadRequest(respStatus);
+        }
+
+
+
+        [HttpGet]
+        [ActionName("ListUsers")]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users;
+
+            return Ok(users);
+        }
+
+
+
+        [HttpGet]
+        [ActionName("ListRoles")]
+        public IActionResult ListRoles()
+        {
+            var roles = roleManager.Roles;
+
+            return Ok(roles);
+        }
+
+        [HttpDelete]
+        [ActionName("DeleteRole")]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+
+            IdentityResult result = await roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "Role Deleted" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return BadRequest(respStatus);
+        }
+
+
+        [HttpPut]
+        [ActionName("EditRole")]
+        public async Task<IActionResult> EditRole(EditRoleModel model)
+        {
+            var role = await roleManager.FindByIdAsync(model.Id);
+
+            role.Name = model.RoleName;
+
+            IdentityResult result = await roleManager.UpdateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "Role Updated" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return BadRequest(respStatus);
+        }
+
+
+        ///Assign Role to User 
+        /// One by One
+        ///
+        [HttpPost]
+        [ActionName("AssignRole")]
+        public async Task<IActionResult> AssignRole([FromBody] UserToRoleModel model)
+        {
+            var user = await userManager.FindByIdAsync(model.UserId);
+
+            var role = await roleManager.FindByIdAsync(model.RoleId);
+
+            if (await userManager.IsInRoleAsync(user, role.Name))
+            {
+                return BadRequest(new ReponseStatus { Status = "Failure", Message = "User already has the Role" });
+            }
+
+
+            IdentityResult result = await userManager.AddToRoleAsync(user, role.Name);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "Role assigned to User" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return BadRequest(respStatus);
+
+        }
+
+
+    }
+}

@@ -1,4 +1,5 @@
-﻿using AtoCash.Models;
+﻿using AtoCash.Authentication;
+using AtoCash.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AtoCash.Data
 {
-    public class AtoCashDbContext : IdentityDbContext
+    public class AtoCashDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public AtoCashDbContext(DbContextOptions<AtoCashDbContext> options) : base(options)
