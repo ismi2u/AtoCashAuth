@@ -35,7 +35,7 @@ namespace AtoCash.Authentication
 
             if (useremail != null)
             {
-                return BadRequest(new ReponseStatus { Status = "Failure", Message = "Email is already taken" });
+                return NotFound(new ReponseStatus { Status = "Failure", Message = "Email is already taken" });
             }
 
             MailAddress mailAddress = new MailAddress(model.Email);
@@ -43,7 +43,7 @@ namespace AtoCash.Authentication
             //ASSIGN DOMAIN NAME HERE
             if ( mailAddress.Host.ToUpper() != "GMAIL.COM")
             {
-                return BadRequest(new ReponseStatus { Status = "Failure", Message = "Use company mail address!" });
+                return NotFound(new ReponseStatus { Status = "Failure", Message = "Use company mail address!" });
             }
             //Creating a IdentityUser object
             var user = new ApplicationUser { UserName= model.Username, Email = model.Email, PasswordHash = model.Password };
@@ -81,6 +81,8 @@ namespace AtoCash.Authentication
             //if signin successful send message
             if (result.Succeeded)
             {
+
+                userManager.g
                 return Ok(new ReponseStatus { Status = "Success", Message = "User Signedin Successfully" });
             }
 

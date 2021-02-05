@@ -94,8 +94,33 @@ namespace AtoCash.Authentication
                 respStatus.Message = respStatus.Message + error.Description + "\n";
             }
 
-            return BadRequest(respStatus);
+            return NotFound(respStatus);
         }
+
+        [HttpDelete]
+        [ActionName("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            IdentityResult result = await userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "User Deleted" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return NotFound(respStatus);
+        }
+
+
 
 
         [HttpPut]
@@ -120,8 +145,35 @@ namespace AtoCash.Authentication
                 respStatus.Message = respStatus.Message + error.Description + "\n";
             }
 
-            return BadRequest(respStatus);
+            return NotFound(respStatus);
         }
+
+
+        [HttpPut]
+        [ActionName("EditUser")]
+        public async Task<IActionResult> EditUser(EditUserModel model)
+        {
+            var user = await userManager.FindByIdAsync(model.Id);
+
+            user.UserName = model.Username;
+
+            IdentityResult result = await userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok(new ReponseStatus { Status = "Success", Message = "User Updated" });
+            }
+
+            ReponseStatus respStatus = new ReponseStatus();
+
+            foreach (IdentityError error in result.Errors)
+            {
+                respStatus.Message = respStatus.Message + error.Description + "\n";
+            }
+
+            return NotFound(respStatus);
+        }
+
 
 
         ///Assign Role to User 
