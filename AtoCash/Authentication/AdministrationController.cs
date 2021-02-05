@@ -26,7 +26,7 @@ namespace AtoCash.Authentication
 
         [HttpPost]
         [ActionName("CreateRole")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole([FromBody] RoleModel model)
         {
 
@@ -76,6 +76,7 @@ namespace AtoCash.Authentication
 
         [HttpDelete]
         [ActionName("DeleteRole")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -99,6 +100,7 @@ namespace AtoCash.Authentication
 
         [HttpDelete]
         [ActionName("DeleteUser")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -125,6 +127,7 @@ namespace AtoCash.Authentication
 
         [HttpPut]
         [ActionName("EditRole")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditRole(EditRoleModel model)
         {
             var role = await roleManager.FindByIdAsync(model.Id);
@@ -151,6 +154,7 @@ namespace AtoCash.Authentication
 
         [HttpPut]
         [ActionName("EditUser")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditUser(EditUserModel model)
         {
             var user = await userManager.FindByIdAsync(model.Id);
@@ -181,6 +185,7 @@ namespace AtoCash.Authentication
         ///
         [HttpPost]
         [ActionName("AssignRole")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AssignRole([FromBody] UserToRoleModel model)
         {
             var user = await userManager.FindByIdAsync(model.UserId);

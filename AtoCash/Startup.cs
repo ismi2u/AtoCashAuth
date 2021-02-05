@@ -1,5 +1,6 @@
 using AtoCash.Authentication;
 using AtoCash.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,10 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 //"SQLConnectionString": "server=DESKTOP-SMJTEA9\\SQLEXPRESS; database=AtoCashDB; User=sa; Password=Pa55word2019!123;trusted_connection=false; MultipleActiveResultSets=true",
@@ -41,11 +44,40 @@ namespace AtoCash
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AtoCashDbContext>();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opts =>
+            {
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
 
+
+                    ValidIssuer ="https://localhost:5001",
+                    ValidAudience = "https://localhost:5001",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySecretKey12323232"))
+                };
+            });
 
             services.AddControllers();
-            services.AddCors(options => options.AddDefaultPolicy(
-              builder => builder.AllowAnyOrigin()));
+            //services.AddCors(options =>
+            //    options.AddDefaultPolicy(
+            //  builder => builder.AllowAnyOrigin()));
+
+            services.AddCors(options =>
+               options.AddPolicy("myCorsPolicy", builder => {
+                   builder.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                           
+                   }
+               ));
+
 
             services.AddSwaggerGen(c =>
             {
@@ -64,7 +96,7 @@ namespace AtoCash
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("myCorsPolicy");
             app.UseRouting();
             
             app.UseAuthentication(); //add before MVC

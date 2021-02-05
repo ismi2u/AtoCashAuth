@@ -22,3 +22,10 @@ C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\AtoCash.pdb
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\obj\Debug\docker-compose.dcprojAssemblyReference.cache
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\obj\Debug\docker-compose.dcproj.CopyComplete
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Tokens.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Protocols.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Logging.dll
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.dll
