@@ -22,6 +22,7 @@ namespace AtoCash.Authentication
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
 
+
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
@@ -30,7 +31,7 @@ namespace AtoCash.Authentication
         // GET: api/<AccountController>
         [HttpPost]
         [ActionName("Register")]
-        [Authorize]
+        [Authorize (Roles ="Admin")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             //check if email is already in use if yes.. throw error
@@ -89,13 +90,18 @@ namespace AtoCash.Authentication
 
                 var signingcredentials = new SigningCredentials(secretkey, SecurityAlgorithms.HmacSha256);
 
+                var modeluser = await userManager.FindByEmailAsync(model.Email);
+                var userroles = await userManager.GetRolesAsync(modeluser);
                 //add claims
                 var claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, model.Email),
-                 new Claim(ClaimTypes.Role, "Admin")
-
+                new Claim(ClaimTypes.Name, modeluser.UserName),
+                 new Claim(ClaimTypes.Email, model.Email)
                 };
-
+                //add all roles belonging to the user
+                 foreach (var role in userroles) 
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
 
                 var tokenOptions = new JwtSecurityToken(
 
