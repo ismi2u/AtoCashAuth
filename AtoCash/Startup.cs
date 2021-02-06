@@ -1,5 +1,6 @@
 using AtoCash.Authentication;
 using AtoCash.Data;
+using EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -65,10 +66,6 @@ namespace AtoCash
             });
 
             services.AddControllers();
-            //services.AddCors(options =>
-            //    options.AddDefaultPolicy(
-            //  builder => builder.AllowAnyOrigin()));
-
             services.AddCors(options =>
                options.AddPolicy("myCorsPolicy", builder => {
                    builder.AllowAnyOrigin()
@@ -77,6 +74,12 @@ namespace AtoCash
                            
                    }
                ));
+            //email service
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+
+            services.AddScoped<IEmailSender, EmailSender>();
+            ///
 
 
             services.AddSwaggerGen(c =>

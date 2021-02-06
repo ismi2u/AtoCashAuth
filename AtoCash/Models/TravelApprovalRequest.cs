@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AtoCash.Models
 {
+    [ComplexType]
     public class TravelApprovalRequest
     {
 
@@ -27,6 +28,9 @@ namespace AtoCash.Models
         [Required]
         public DateTime TravelEndDate { get; set; }
 
+        [Required]
+        [Column(TypeName = "nvarchar(150)")]
+        public string TravelPurpose { get; set; }
 
 
         /// <summary>

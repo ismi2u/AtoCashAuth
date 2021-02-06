@@ -14,6 +14,8 @@ namespace AtoCash.Models
         public int EmployeeId { get; set; }
         public decimal PettyClaimAmount { get; set; }
 
+        public string PettyClaimRequestDesc { get; set; }
+
         public DateTime CashReqDate { get; set; }
         public int? ProjectId { get; set; }
 

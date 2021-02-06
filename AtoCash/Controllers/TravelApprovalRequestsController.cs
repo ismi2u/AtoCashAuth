@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AtoCash.Data;
 using AtoCash.Models;
+using EmailService;
 
 namespace AtoCash.Controllers
 {
@@ -15,10 +16,12 @@ namespace AtoCash.Controllers
     public class TravelApprovalRequestsController : ControllerBase
     {
         private readonly AtoCashDbContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public TravelApprovalRequestsController(AtoCashDbContext context)
+        public TravelApprovalRequestsController(AtoCashDbContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         // GET: api/TravelApprovalRequests
@@ -156,7 +159,7 @@ namespace AtoCash.Controllers
             return CreatedAtAction("GetGetTravelApprovalRequest", new { id = travelApprovalRequest.Id }, travelApprovalRequest);
         }
 
-        private void DepartmentTravelRequest(TravelApprovalRequestDTO travelApprovalRequestDto)
+        private async Task DepartmentTravelRequest(TravelApprovalRequestDTO travelApprovalRequestDto)
         {
 
 
@@ -189,11 +192,20 @@ namespace AtoCash.Controllers
                     ApprovalStatusTypeId = (int)ApprovalStatus.Pending //1-Pending, 2-Approved, 3-Rejected
                 });
 
-                ///send email
-                /// step : 3
-                /// 
-                ///
-                ///
+                //##### 5. Send email to the Approver
+                //Multiple instance for Department
+                //####################################
+
+                var approverMailAddress = approver.Email;
+                string subject = "Expense Claim Approval Request " + travelApprovalRequestDto.Id.ToString();
+                Employee emp = _context.Employees.Find(travelApprovalRequestDto.EmployeeId);
+                var expenseReimClaimReq = _context.ExpenseReimburseRequests.Find(travelApprovalRequestDto.Id);
+                string content = "Travel Request Approval sought by " + emp.FirstName + "/nfor the purpose of " + travelApprovalRequestDto.TravelPurpose;
+                var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+               await _emailSender.SendEmailAsync(messagemail);
+
+                //repeat for each approver
 
 
             }
@@ -201,7 +213,7 @@ namespace AtoCash.Controllers
         }
 
 
-        private void ProjectTravelRequest(TravelApprovalRequestDTO travelApprovalRequestDto)
+        private async Task ProjectTravelRequest(TravelApprovalRequestDTO travelApprovalRequestDto)
         {
             //Add oned entry to the TravelApprovalRequestTracker for PROJECT based Request
             //Here Department ID will be null
@@ -223,6 +235,20 @@ namespace AtoCash.Controllers
                 FinalApprovedDate = null,
                 ApprovalStatusTypeId = (int)ApprovalStatus.Pending //1-Pending, 2-Approved, 3-Rejected
             });
+
+            //##### 5. Send email to the Approver
+            //Single instance for Project
+            //####################################
+
+            var approverMailAddress = approver.Email;
+            string subject = "Expense Claim Approval Request " + travelApprovalRequestDto.Id.ToString();
+            Employee emp = _context.Employees.Find(travelApprovalRequestDto.EmployeeId);
+            var expenseReimClaimReq = _context.ExpenseReimburseRequests.Find(travelApprovalRequestDto.Id);
+            string content = "Travel Request Approval sought by " + emp.FirstName + "/nfor the purpose of " + travelApprovalRequestDto.TravelPurpose;
+            var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+           await _emailSender.SendEmailAsync(messagemail);
+
         }
 
         // DELETE: api/TravelApprovalRequests/5

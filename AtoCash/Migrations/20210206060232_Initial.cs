@@ -522,6 +522,7 @@ namespace AtoCash.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     PettyClaimAmount = table.Column<decimal>(type: "decimal(7,2)", nullable: false),
+                    PettyClaimRequestDesc = table.Column<string>(type: "nvarchar(150)", nullable: false),
                     CashReqDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: true),
                     SubProjectId = table.Column<int>(type: "int", nullable: true),

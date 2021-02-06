@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AtoCash.Data;
 using AtoCash.Models;
+using EmailService;
 
 namespace AtoCash.Controllers
 {
@@ -15,10 +16,12 @@ namespace AtoCash.Controllers
     public class PettyCashRequestsController : ControllerBase
     {
         private readonly AtoCashDbContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public PettyCashRequestsController(AtoCashDbContext context)
+        public PettyCashRequestsController(AtoCashDbContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         // GET: api/PettyCashRequests
@@ -36,6 +39,7 @@ namespace AtoCash.Controllers
                 pettyCashRequestsDTO.Id = pettyCashRequest.Id;
                 pettyCashRequestsDTO.EmployeeId = pettyCashRequest.EmployeeId;
                 pettyCashRequestsDTO.PettyClaimAmount = pettyCashRequest.PettyClaimAmount;
+                pettyCashRequestsDTO.PettyClaimRequestDesc = pettyCashRequest.PettyClaimRequestDesc;
                 pettyCashRequestsDTO.CashReqDate = pettyCashRequest.CashReqDate;
                 pettyCashRequestsDTO.ProjectId = pettyCashRequest.ProjectId;
                 pettyCashRequestsDTO.SubProjectId = pettyCashRequest.SubProjectId;
@@ -64,6 +68,7 @@ namespace AtoCash.Controllers
             pettyCashRequestDTO.Id = pettyCashRequest.Id;
             pettyCashRequestDTO.EmployeeId = pettyCashRequest.EmployeeId;
             pettyCashRequestDTO.PettyClaimAmount = pettyCashRequest.PettyClaimAmount;
+            pettyCashRequestDTO.PettyClaimRequestDesc = pettyCashRequest.PettyClaimRequestDesc;
             pettyCashRequestDTO.CashReqDate = pettyCashRequest.CashReqDate;
             pettyCashRequestDTO.ProjectId = pettyCashRequest.ProjectId;
             pettyCashRequestDTO.SubProjectId = pettyCashRequest.SubProjectId;
@@ -88,6 +93,7 @@ namespace AtoCash.Controllers
             pettyCashRequest.Id = pettyCashRequestDto.Id;
             pettyCashRequest.EmployeeId = pettyCashRequestDto.EmployeeId;
             pettyCashRequest.PettyClaimAmount = pettyCashRequestDto.PettyClaimAmount;
+            pettyCashRequest.PettyClaimRequestDesc = pettyCashRequestDto.PettyClaimRequestDesc;
             pettyCashRequest.CashReqDate = pettyCashRequestDto.CashReqDate;
             pettyCashRequest.ProjectId = pettyCashRequestDto.ProjectId;
             pettyCashRequest.SubProjectId = pettyCashRequestDto.SubProjectId;
@@ -120,21 +126,6 @@ namespace AtoCash.Controllers
         [HttpPost]
         public async Task<ActionResult<PettyCashRequest>> PostPettyCashRequest(PettyCashRequestDTO pettyCashRequestDto)
         {
-            //PettyCashRequest pettyCashRequest = new PettyCashRequest();
-
-            //pettyCashRequest.Id = pettyCashRequestDto.Id;
-            //pettyCashRequest.EmployeeId = pettyCashRequestDto.EmployeeId;
-            //pettyCashRequest.PettyClaimAmount = pettyCashRequestDto.PettyClaimAmount;
-            //pettyCashRequest.CashReqDate = pettyCashRequestDto.CashReqDate;
-            //pettyCashRequest.ProjectId = pettyCashRequestDto.ProjectId;
-            //pettyCashRequest.SubProjectId = pettyCashRequestDto.SubProjectId;
-            //pettyCashRequest.WorkTaskId = pettyCashRequestDto.WorkTaskId;
-
-            //_context.PettyCashRequests.Add(pettyCashRequest);
-            //await _context.SaveChangesAsync();
-
-
-            //return CreatedAtAction("GetPettyCashRequest", new { id = pettyCashRequest.Id }, pettyCashRequest);
 
             /*!!=========================================
                Check Eligibility for Cash Disbursement
@@ -223,21 +214,29 @@ namespace AtoCash.Controllers
 
 
         //NO HTTPACTION HERE. Void method just to add data to database table
-        private async void ProcessPettyCashRequestClaim(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
+        private async Task ProcessPettyCashRequestClaim(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
         {
 
             if (pettyCashRequestDto.ProjectId == null)
             {
+                //Goes to Option 1 (Project)
                 await Task.Run(() => ProjectCashRequest(pettyCashRequestDto, empCurAvailBal));
             }
             else
             {
+                //Goes to Option 2 (Department)
                 await Task.Run(() => DepartmentCashRequest(pettyCashRequestDto, empCurAvailBal));
             }
 
         }
 
-        private async void ProjectCashRequest(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
+
+        /// <summary>
+        /// This is the option 1
+        /// </summary>
+        /// <param name="pettyCashRequestDto"></param>
+        /// <param name="empCurAvailBal"></param>
+        private async Task ProjectCashRequest(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
         {
 
             //get costcentID based on project
@@ -260,22 +259,36 @@ namespace AtoCash.Controllers
                 FinalApprovedDate = null,
                 ApprovalStatusTypeId = (int)ApprovalStatus.Pending //1-Pending, 2-Approved, 3-Rejected
 
-            }) ;
-
+            });
 
             await _context.SaveChangesAsync();
+
+
 
             //##### 5. Send email to the user
             //##
             //##
             //##   SEND EMAIL HERE
-            //##
+            ///
             //##
             //####################################
 
+            var approverMailAddress = approver.Email;
+            string subject = "Pettycash Request Approval " + pettyCashRequestDto.Id.ToString();
+            Employee emp = await _context.Employees.FindAsync(pettyCashRequestDto.EmployeeId);
+            var pettycashreq = _context.PettyCashRequests.Find(pettyCashRequestDto.Id);
+            string content = "Petty Cash Approval sought by " + emp.FirstName + "/nCash Request for the amount of " + pettycashreq.PettyClaimAmount + "/ntowards "  + pettycashreq.PettyClaimRequestDesc;
+            var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+           await _emailSender.SendEmailAsync(messagemail);
         }
 
-        private async void DepartmentCashRequest(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
+        /// <summary>
+        /// This is option 2
+        /// </summary>
+        /// <param name="pettyCashRequestDto"></param>
+        /// <param name="empCurAvailBal"></param>
+        private async Task DepartmentCashRequest(PettyCashRequestDTO pettyCashRequestDto, decimal empCurAvailBal)
         {
             #region
             int empid = pettyCashRequestDto.EmployeeId;
@@ -362,14 +375,17 @@ namespace AtoCash.Controllers
                 await _context.SaveChangesAsync();
 
                 #endregion
-
-                //##### 5. Send email to the user
-                //##
-                //##
-                //##   SEND EMAIL HERE
-                //##
-                //##
+                //##### 5. Send email to the Approver
                 //####################################
+
+                var approverMailAddress = approver.Email;
+                string subject = "Pettycash Request Approval " + pettyCashRequestDto.Id.ToString();
+                Employee emp = await _context.Employees.FindAsync(pettyCashRequestDto.EmployeeId);
+                var pettycashreq = _context.PettyCashRequests.Find(pettyCashRequestDto.Id);
+                string content = "Petty Cash Approval sought by " + emp.FirstName + "/nCash Request for the amount of " + pettycashreq.PettyClaimAmount + "/ntowards " + pettycashreq.PettyClaimRequestDesc;
+                var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+                await _emailSender.SendEmailAsync(messagemail);
 
             }
 

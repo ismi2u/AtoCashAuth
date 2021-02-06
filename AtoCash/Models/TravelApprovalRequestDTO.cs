@@ -13,6 +13,7 @@ namespace AtoCash.Models
         public int EmployeeId { get; set; }
         public DateTime TravelStartDate { get; set; }
         public DateTime TravelEndDate { get; set; }
+        public string TravelPurpose { get; set; }
 
         public int? ProjectId { get; set; }
         public int? SubProjectId { get; set; }

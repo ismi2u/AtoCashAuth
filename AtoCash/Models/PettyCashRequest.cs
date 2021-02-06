@@ -23,6 +23,10 @@ namespace AtoCash.Models
         public decimal PettyClaimAmount { get; set; }
 
         [Required]
+        [Column(TypeName = "nvarchar(150)")]
+        public string PettyClaimRequestDesc{ get; set; }
+
+        [Required]
         public DateTime CashReqDate { get; set; }
 
         

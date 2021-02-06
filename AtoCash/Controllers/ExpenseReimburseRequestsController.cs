@@ -10,6 +10,7 @@ using AtoCash.Models;
 using System.Text;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using EmailService;
 
 namespace AtoCash.Controllers
 {
@@ -19,11 +20,13 @@ namespace AtoCash.Controllers
     {
         private readonly AtoCashDbContext _context;
         private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IEmailSender _emailSender;
 
-        public ExpenseReimburseRequestsController(AtoCashDbContext context, IWebHostEnvironment hostEnv)
+        public ExpenseReimburseRequestsController(AtoCashDbContext context, IWebHostEnvironment hostEnv, IEmailSender emailSender)
         {
             _context = context;
             hostingEnvironment = hostEnv;
+            _emailSender = emailSender;
         }
 
         // GET: api/ExpenseReimburseRequests
@@ -146,25 +149,7 @@ namespace AtoCash.Controllers
         [HttpPost]
         public async Task<ActionResult<ExpenseReimburseRequest>> PostExpenseReimburseRequest(List<ExpenseReimburseRequestDTO> listExpenseReimburseRequestDto)
         {
-            //ExpenseReimburseRequest expenseReimburseRequest = new ExpenseReimburseRequest();
-
-            //expenseReimburseRequest.Id = expenseReimburseRequestDto.Id;
-            //expenseReimburseRequest.EmployeeId = expenseReimburseRequestDto.EmployeeId;
-            //expenseReimburseRequest.ExpenseReimbClaimAmount = expenseReimburseRequestDto.ExpenseReimbClaimAmount;
-            //expenseReimburseRequest.DocumentPath = expenseReimburseRequestDto.DocumentPath;
-            //expenseReimburseRequest.ExpReimReqDate = expenseReimburseRequestDto.ExpReimReqDate;
-            //expenseReimburseRequest.ExpenseTypeId = expenseReimburseRequestDto.ExpenseTypeId;
-            //expenseReimburseRequest.ProjectId = expenseReimburseRequestDto.ProjectId;
-            //expenseReimburseRequest.SubProjectId = expenseReimburseRequestDto.SubProjectId;
-            //expenseReimburseRequest.WorkTaskId = expenseReimburseRequestDto.WorkTaskId;
-
-
-            //_context.ExpenseReimburseRequests.Add(expenseReimburseRequest);
-            //await _context.SaveChangesAsync();
-
-
-            //return CreatedAtAction("GetExpenseReimburseRequest", new { id = expenseReimburseRequest.Id }, expenseReimburseRequest);
-
+            
 
             if (listExpenseReimburseRequestDto.Count == 1)
             {
@@ -336,7 +321,7 @@ namespace AtoCash.Controllers
 
 
 
-        private void DepartmentBasedExpReimRequest(ExpenseReimburseRequestDTO expenseReimburseRequestDto, int ExpReimReqId)
+        private async Task DepartmentBasedExpReimRequest(ExpenseReimburseRequestDTO expenseReimburseRequestDto, int ExpReimReqId)
         {
 
             var getEmpClaimApproversAllLevels = _context.ApprovalRoleMaps.Where(a => a.ApprovalGroupId == expenseReimburseRequestDto.EmployeeId).ToList().OrderBy(a => a.ApprovalLevel);
@@ -360,21 +345,28 @@ namespace AtoCash.Controllers
                     ApprovalStatusTypeId = (int)ApprovalStatus.Pending //1-Pending, 2-Approved, 3-Rejected
                 });
 
+                await _context.SaveChangesAsync();
+
+                //##### 5. Send email to the Approver
+                //####################################
+
+                var approverMailAddress = approver.Email;
+                string subject = "Expense Claim Approval Request " + expenseReimburseRequestDto.Id.ToString();
+                Employee emp = _context.Employees.Find(expenseReimburseRequestDto.EmployeeId);
+                var expenseReimClaimReq = _context.ExpenseReimburseRequests.Find(expenseReimburseRequestDto.Id);
+                string content = "Expense Reimbursement request Approval sought by " + emp.FirstName + "/nfor the amount of " + expenseReimClaimReq.ExpenseReimbClaimAmount + "/ntowards " + expenseReimClaimReq.ExpenseType;
+                var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+               await _emailSender.SendEmailAsync(messagemail);
+
+                //repeat for each approver
             }
 
-
-
-            //##### 5. Send email to the user
-            //##
-            //##
-            //##   SEND EMAIL HERE
-            //##
-            //##
-            //####################################
+           
         }
 
 
-        private void ProjectBasedExpReimRequest(ExpenseReimburseRequestDTO expenseReimburseRequestDto, int ExpReimReqId)
+        private async Task ProjectBasedExpReimRequest(ExpenseReimburseRequestDTO expenseReimburseRequestDto, int ExpReimReqId)
         {
 
             int projManagerid = _context.ProjectManagements.Find(expenseReimburseRequestDto.ProjectId).EmployeeId;
@@ -393,14 +385,18 @@ namespace AtoCash.Controllers
                 ApprovalStatusTypeId = (int)ApprovalStatus.Pending //1-Pending, 2-Approved, 3-Rejected
             });
 
-
-            //##### 5. Send email to the user
-            //##
-            //##
-            //##   SEND EMAIL HERE
-            //##
-            //##
+            //##### 5. Send email to the Approver
+            //Single instance for Project
             //####################################
+
+            var approverMailAddress = approver.Email;
+            string subject = "Expense Claim Approval Request " + expenseReimburseRequestDto.Id.ToString();
+            Employee emp = _context.Employees.Find(expenseReimburseRequestDto.EmployeeId);
+            var expenseReimClaimReq = _context.ExpenseReimburseRequests.Find(expenseReimburseRequestDto.Id);
+            string content = "Expense Reimbursement request Approval sought by " + emp.FirstName + "/nfor the amount of " + expenseReimClaimReq.ExpenseReimbClaimAmount + "/ntowards " + expenseReimClaimReq.ExpenseType;
+            var messagemail = new Message(new string[] { approverMailAddress }, subject, content);
+
+           await _emailSender.SendEmailAsync(messagemail);
         }
 
 

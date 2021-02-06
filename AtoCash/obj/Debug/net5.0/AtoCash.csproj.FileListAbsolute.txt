@@ -353,3 +353,4 @@ C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\AtoCash.d
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\ref\AtoCash.dll
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\AtoCash.pdb
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\AtoCash.genruntimeconfig.cache
+C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\EmailService.dll
