@@ -11,6 +11,7 @@ namespace AtoCash.Authentication
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -26,7 +27,7 @@ namespace AtoCash.Authentication
 
         [HttpPost]
         [ActionName("CreateRole")]
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> CreateRole([FromBody] RoleModel model)
         {
 
