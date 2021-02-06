@@ -50,5 +50,9 @@ namespace AtoCash.Data
         public DbSet<ProjectManagement> ProjectManagements { get; set; }
 
         public DbSet<ExpenseType> ExpenseTypes { get; set; }
+
+        public DbSet<TravelApprovalRequest> TravelApprovalRequests { get; set; }
+
+        public DbSet<TravelApprovalStatusTracker> TravelApprovalStatusTrackers { get; set; }
     }
 }

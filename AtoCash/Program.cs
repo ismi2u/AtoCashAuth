@@ -13,6 +13,8 @@ namespace AtoCash
     {
         public static void Main(string[] args)
         {
+           
+
             CreateHostBuilder(args).Build().Run();
         }
 
