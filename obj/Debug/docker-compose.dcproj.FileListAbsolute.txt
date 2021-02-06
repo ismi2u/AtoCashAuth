@@ -29,3 +29,8 @@ C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\System.IdentityModel.Tok
 C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Protocols.dll
 C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.Logging.dll
 C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\EmailService.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\MimeKit.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\MailKit.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\bin\Debug\EmailService.pdb

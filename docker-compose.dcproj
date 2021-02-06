@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>69713c06-b974-4454-bf06-2a722458132e</ProjectGuid>
+    <ProjectGuid>ba7cda00-f88c-4639-8d95-ccd5a3abb636</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>atocash</DockerServiceName>

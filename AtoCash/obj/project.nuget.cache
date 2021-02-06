@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ba8k8JxnZPaelKbmosg05C0HpSaO/w4meM1gJkmfh03lcExlY4Xr7T96zCtgwHEs8AM9cm6r3uxuM4W1btB4Bg==",
+  "dgSpecHash": "N14QOepKDlZEIjcB1nG451EGGL2Yvhnm/C4wI9HtLyzxlmMOM/pAbeFt/7MkqAmLBqlFsEdWVxAS/s9lo49HGQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
+  "projectFilePath": "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\MohamedKhan\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\MohamedKhan\\.nuget\\packages\\mailkit\\2.6.0\\mailkit.2.6.0.nupkg.sha512",

@@ -7,7 +7,7 @@ services:
         com.microsoft.created-by: visual-studio
         com.microsoft.visual-studio.project-name: AtoCash
       target: base
-    container_name: AtoCash_1
+    container_name: AtoCash
     entrypoint: tail -f /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development

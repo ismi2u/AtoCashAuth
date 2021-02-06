@@ -185,7 +185,7 @@ namespace AtoCash.Authentication
         ///
         [HttpPost]
         [ActionName("AssignRole")]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignRole([FromBody] UserToRoleModel model)
         {
             var user = await userManager.FindByIdAsync(model.UserId);
@@ -202,7 +202,7 @@ namespace AtoCash.Authentication
 
             if (result.Succeeded)
             {
-                return Ok(new ReponseStatus { Status = "Success", Message = "Role assigned to User" });
+                return Ok(new ReponseStatus { Status = "Success", Message = role.Name + " assigned to User" });
             }
 
             ReponseStatus respStatus = new ReponseStatus();

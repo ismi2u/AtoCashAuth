@@ -354,3 +354,8 @@ C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\ref\AtoCa
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\AtoCash.pdb
 C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\obj\Debug\net5.0\AtoCash.genruntimeconfig.cache
 C:\Users\MohamedKhan\Source\Repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\EmailService.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\MailKit.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\MimeKit.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\NETCore.MailKit.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\MohamedKhan\source\repos\AtoCashAuth\AtoCash\bin\Debug\net5.0\EmailService.pdb

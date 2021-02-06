@@ -31,7 +31,7 @@ namespace AtoCash.Authentication
         // GET: api/<AccountController>
         [HttpPost]
         [ActionName("Register")]
-        [Authorize (Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             //check if email is already in use if yes.. throw error

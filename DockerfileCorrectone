@@ -7,10 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
-COPY ["AtoCash.csproj", "./"]
-RUN dotnet restore "AtoCash.csproj"
+COPY ["AtoCash/AtoCash.csproj", "AtoCash/"]
+COPY ["EmailService/EmailService.csproj", "EmailService/"]
+RUN dotnet restore "AtoCash/AtoCash.csproj"
 COPY . .
-WORKDIR "/src"
+WORKDIR "/src/AtoCash"
 RUN dotnet build "AtoCash.csproj" -c Release -o /app/build
 
 FROM build AS publish
