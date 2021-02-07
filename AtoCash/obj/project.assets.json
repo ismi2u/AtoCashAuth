@@ -9970,11 +9970,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
+      "projectUniqueName": "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
       "projectName": "AtoCash",
-      "projectPath": "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
+      "projectPath": "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\AtoCash\\AtoCash.csproj",
       "packagesPath": "C:\\Users\\MohamedKhan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\AtoCash\\obj\\",
+      "outputPath": "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\AtoCash\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\MohamedKhan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -9991,8 +9991,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\EmailService\\EmailService.csproj": {
-              "projectPath": "C:\\Users\\MohamedKhan\\Source\\Repos\\AtoCashAuth\\EmailService\\EmailService.csproj"
+            "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\EmailService\\EmailService.csproj": {
+              "projectPath": "C:\\Users\\MohamedKhan\\source\\repos\\AtoCashAuth\\EmailService\\EmailService.csproj"
             }
           }
         }

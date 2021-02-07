@@ -4,7 +4,7 @@ networks:
 services:
   atocash:
     build:
-      context: C:\Users\MohamedKhan\source\repos\AtoCashAuth
+      context: C:\Users\MohamedKhan\Source\Repos\AtoCashAuth
       dockerfile: AtoCash/Dockerfile
     command: tail -f /dev/null
     container_name: appserver
@@ -14,7 +14,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443;http://+:80
-    image: ismi2u/atocash:latest
+    image: ismi2u/atocash
     networks:
       mynetwork: {}
     ports:
