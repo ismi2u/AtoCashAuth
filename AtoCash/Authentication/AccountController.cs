@@ -31,7 +31,7 @@ namespace AtoCash.Authentication
         // GET: api/<AccountController>
         [HttpPost]
         [ActionName("Register")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "AtominosAdmin, Admin")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             //check if email is already in use if yes.. throw error
@@ -45,8 +45,8 @@ namespace AtoCash.Authentication
 
             MailAddress mailAddress = new MailAddress(model.Email);
             
-            //ASSIGN DOMAIN NAME HERE
-            if ( mailAddress.Host.ToUpper() != "GMAIL.COM")
+            //MODIFY HOST DOMAIN NAME HERE => CURRENTLY only GMAIL and MAILINATOR
+            if ( (mailAddress.Host.ToUpper() != "MAILINATOR.COM") && mailAddress.Host.ToUpper() != "GMAIL.COM")
             {
                 return NotFound(new ReponseStatus { Status = "Failure", Message = "Use company mail address!" });
             }

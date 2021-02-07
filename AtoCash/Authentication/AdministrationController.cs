@@ -11,7 +11,6 @@ namespace AtoCash.Authentication
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class AdministrationController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -27,7 +26,7 @@ namespace AtoCash.Authentication
 
         [HttpPost]
         [ActionName("CreateRole")]
-        
+        [Authorize(Roles = "AtominosAdmin, Admin")]
         public async Task<IActionResult> CreateRole([FromBody] RoleModel model)
         {
 
@@ -57,6 +56,7 @@ namespace AtoCash.Authentication
 
         [HttpGet]
         [ActionName("ListUsers")]
+        [Authorize(Roles = "Admin, User")]
         public IActionResult ListUsers()
         {
             var users = userManager.Users;
@@ -68,6 +68,7 @@ namespace AtoCash.Authentication
 
         [HttpGet]
         [ActionName("ListRoles")]
+        [Authorize(Roles = "Admin, User")]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
@@ -186,7 +187,7 @@ namespace AtoCash.Authentication
         ///
         [HttpPost]
         [ActionName("AssignRole")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "AtominosAdmin, Admin")]
         public async Task<IActionResult> AssignRole([FromBody] UserToRoleModel model)
         {
             var user = await userManager.FindByIdAsync(model.UserId);
